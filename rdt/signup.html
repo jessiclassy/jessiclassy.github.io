@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
   <title>Rubber Duck Talks — Sign Up</title>
   <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐤</text></svg>">
 </head>
 <body>
   <header>
     <nav>
-      <a href="/">Home</a>
-      <a href="/rdt">Rubber Duck Talks</a>
+        <a href="/">home</a>
+        <a href="/rdt">rubber duck talks</a>
     </nav>
   </header>
 
@@ -18,11 +19,11 @@
       <a href="/rdt">&larr; Back to RDT</a>
     </div>
 
-    <h1>&#x1F425; Join Rubber Duck Talks</h1>
+    <h1>🐥 Join Rubber Duck Talks</h1>
     <p>Enter your info below to join the weekly accountability pairing.</p>
 
     <form id="signupForm">
-      <label for="name">Full name</label>
+      <label for="name">Name</label>
       <input type="text" id="name" name="name" required>
 
       <label for="email">Email address</label>
@@ -58,7 +59,7 @@
         const data = await response.json();
 
         if (response.ok) {
-          messageDiv.innerHTML = `<p style="color: green; border-left: 3px solid green; padding-left: 1rem;">✅ ${data.message || "You're in! Check your email for confirmation."}</p>`;
+          messageDiv.innerHTML = `<p style="color: green; border-left: 3px solid green; padding-left: 1rem;">✅ ${data.message || "You're in! You'll get your first reminder on Sunday."}</p>`;
           form.reset();
         } else {
           messageDiv.innerHTML = `<p style="color: red; border-left: 3px solid red; padding-left: 1rem;">❌ ${data.error || "Something went wrong. Please try again."}</p>`;
