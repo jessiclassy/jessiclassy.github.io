@@ -88,8 +88,7 @@ def me():
         return jsonify({"error": "user not found"}), 404
 
     return jsonify({
-        "name": user["name"],
-        "status": user["status"]
+        "name": user["name"]
     })
 
 
