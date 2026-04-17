@@ -1,0 +1,25 @@
+name: Send Pairings
+on:
+  schedule:
+    - cron: '0 12 * * 1'  # Monday at 12pm
+  workflow_dispatch:
+
+jobs:
+  pair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r rdt-backend/requirements.txt
+      - run: python rdt-backend/run_pairing.py
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
+          OPT_OUT_BASE_URL: ${{ secrets.OPT_OUT_BASE_URL }}
