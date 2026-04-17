@@ -23,9 +23,7 @@
   </div>
 
   <script>
-    // Get API base from URL param, fallback to localhost for dev
-    const urlParams = new URLSearchParams(window.location.search);
-    const API_BASE = urlParams.get('api') || 'http://localhost:5000';
+    const API_BASE = "https://rubber-duck-talks.onrender.com";
 
     function getQueryParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
