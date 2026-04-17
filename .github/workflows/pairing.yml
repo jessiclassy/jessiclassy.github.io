@@ -1,7 +1,7 @@
 name: Send Pairings
 on:
   schedule:
-    - cron: '0 12 * * 1'  # Monday at 12pm
+    - cron: '0 19 * * 1'  # Monday at 12pm
   workflow_dispatch:
 
 jobs:
