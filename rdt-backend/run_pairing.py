@@ -1,16 +1,13 @@
 from pairing import run_pairing
-from emailer import send_pairing_emails
 
 def main():
-    pairs = run_pairing()
+    id_pairs = run_pairing()
 
-    if not pairs:
+    if not id_pairs:
         print("Not enough active users to pair this week, skipping.")
         return
 
-    print(f"Pairing complete: {len(pairs)} pairs this week.")
-    send_pairing_emails(pairs)
-    print(f"Reminder emails sent to {len(pairs)} pairs/groups.")
+    print(f"Pairing complete: {len(id_pairs)} pairs this week.")
 
 if __name__ == "__main__":
     main()

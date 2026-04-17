@@ -68,11 +68,11 @@ def _shuffle_into_pairs(users):
     i = 0
 
     while i < len(pool):
-        if i + 2 == len(pool):  # exactly 3 left
+        if len(pool) - i == 3:  # exactly 3 remaining
             pairs.append(pool[i:])
             break
         pairs.append(pool[i:i + 2])
-        i += 2
+    i += 2
 
     return pairs
 
