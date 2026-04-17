@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+  <title>Rubber Duck Talks — Opt Out</title>
+  <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/rdt">Rubber Duck Talks</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="nav">
+      <a href="/rdt">&larr; Back to RDT</a>
+    </div>
+
+    <h1>&#x1F425; Rubber Duck Talks</h1>
+    <div id="content">Loading...</div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:5000"; // Change to Railway URL when deployed
+
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    async function loadOptOut() {
+      const token = getQueryParam("token");
+      const contentDiv = document.getElementById("content");
+
+      if (!token) {
+        contentDiv.innerHTML = `<p style="color: red;">❌ No opt-out token provided. The link you used may be invalid.</p>`;
+        return;
+      }
+
+      try {
+        const checkResponse = await fetch(`${API_BASE}/me?token=${token}`);
+        const checkData = await checkResponse.json();
+
+        if (!checkResponse.ok) {
+          contentDiv.innerHTML = `<p style="color: red;">❌ ${checkData.error || "Invalid or expired token."}</p>`;
+          return;
+        }
+
+        contentDiv.innerHTML = `
+          <p>Hi <strong>${checkData.name || "there"}</strong>!</p>
+          <p>You're currently <strong>${checkData.status === "active" ? "active" : checkData.status}</strong> in Rubber Duck Talks.</p>
+          <p>What would you like to do?</p>
+          <button id="skipWeekBtn" style="margin-right: 0.5rem;">📅 Skip just this week</button>
+          <button id="leaveGroupBtn" style="background-color: #d32f2f;">🚪 Permanently leave the group</button>
+          <div id="actionMessage" style="margin-top: 1rem;"></div>
+        `;
+
+        document.getElementById("skipWeekBtn").addEventListener("click", () => performAction(token, "skip"));
+        document.getElementById("leaveGroupBtn").addEventListener("click", () => performAction(token, "leave"));
+
+      } catch (err) {
+        contentDiv.innerHTML = `<p style="color: red;">❌ Could not reach the server. Is the backend running?</p>`;
+      }
+    }
+
+    async function performAction(token, action) {
+      const messageDiv = document.getElementById("actionMessage");
+      messageDiv.innerHTML = "Processing...";
+
+      const endpoint = action === "skip" ? "/opt-out-week" : "/opt-out-forever";
+
+      try {
+        const response = await fetch(`${API_BASE}${endpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          messageDiv.innerHTML = `<p style="color: green; border-left: 3px solid green; padding-left: 1rem;">✅ ${action === "skip" ? "You've been skipped for this week only. You'll be back in next week's pairing!" : "You've permanently left Rubber Duck Talks. Sorry to see you go! You can always rejoin via the signup page."}</p>`;
+          document.getElementById("skipWeekBtn").disabled = true;
+          document.getElementById("leaveGroupBtn").disabled = true;
+        } else {
+          messageDiv.innerHTML = `<p style="color: red; border-left: 3px solid red; padding-left: 1rem;">❌ ${data.error || "Something went wrong."}</p>`;
+        }
+      } catch (err) {
+        messageDiv.innerHTML = `<p style="color: red; border-left: 3px solid red; padding-left: 1rem;">❌ Could not reach the server.</p>`;
+      }
+    }
+
+    loadOptOut();
+  </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+  <title>Rubber Duck Talks — Sign Up</title>
+  <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/rdt">Rubber Duck Talks</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="nav">
+      <a href="/rdt">&larr; Back to RDT</a>
+    </div>
+
+    <h1>&#x1F425; Join Rubber Duck Talks</h1>
+    <p>Enter your info below to join the weekly accountability pairing.</p>
+
+    <form id="signupForm">
+      <label for="name">Full name</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" required>
+      <br>
+
+      <button type="submit">Join the group</button>
+    </form>
+
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:5000"; // Change to Railway URL when deployed
+
+    const form = document.getElementById("signupForm");
+    const messageDiv = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      messageDiv.innerHTML = "";
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      try {
+        const response = await fetch(`${API_BASE}/signup`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          messageDiv.innerHTML = `<p style="color: green; border-left: 3px solid green; padding-left: 1rem;">✅ ${data.message || "You're in! Check your email for confirmation."}</p>`;
+          form.reset();
+        } else {
+          messageDiv.innerHTML = `<p style="color: red; border-left: 3px solid red; padding-left: 1rem;">❌ ${data.error || "Something went wrong. Please try again."}</p>`;
+        }
+      } catch (err) {
+        messageDiv.innerHTML = `<p style="color: red; border-left: 3px solid red; padding-left: 1rem;">❌ Could not reach the server. Is the backend running?</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
