@@ -1,2 +1,9 @@
 .env
 */__pycache__/*
+
+# general macOS 
+.DS_Store
+.localized
+__MACOSX/
+.AppleDouble
+.LSOverride
